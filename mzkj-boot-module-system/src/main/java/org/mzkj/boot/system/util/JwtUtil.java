@@ -108,6 +108,9 @@ public class JwtUtil {
             // 校验redis中的JWT是否与当前的一致，不一致则代表用户已注销/用户在不同设备登录，均代表JWT已过期
             String redisToken = stringRedisTemplate.opsForValue()
                     .get(redisKey);
+            log.info("#######jwt##{}",jwt);
+            log.info("####redisToken###{}",redisToken);
+            log.info("#####{}",StrUtil.equals(jwt,redisToken));
             if (!StrUtil.equals(jwt, redisToken)) {
                 throw new SecurityException(Status.TOKEN_OUT_OF_CTRL);
             }
@@ -129,6 +132,8 @@ public class JwtUtil {
             throw new SecurityException(Status.TOKEN_PARSE_ERROR);
         }
     }
+
+
 
     /**
      * 设置JWT过期

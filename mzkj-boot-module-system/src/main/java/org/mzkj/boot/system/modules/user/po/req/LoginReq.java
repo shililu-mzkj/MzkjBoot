@@ -18,7 +18,6 @@ public class LoginReq{
      */
     @NotBlank(message = "用户名不能为空")
     private String username;
-
     /**
      * 密码
      */

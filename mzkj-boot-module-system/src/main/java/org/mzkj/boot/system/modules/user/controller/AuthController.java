@@ -8,6 +8,7 @@ import org.mzkj.boot.system.util.JwtUtil;
 import org.mzkj.boot.common.exception.SecurityException;
 
 import lombok.extern.slf4j.Slf4j;
+import org.mzkj.boot.system.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,6 +50,14 @@ public class AuthController {
                 .setAuthentication(authentication);
         String jwt = jwtUtil.createJWT(authentication,loginReq.getRememberMe());
         return CommonResult.ofSuccess(new LoginRes(jwt));
+    }
+
+    /**
+     * 登录
+     */
+    @PostMapping("/userInfo")
+    public CommonResult userInfo() {
+        return CommonResult.ofSuccess(SecurityUtil.getCurrentUser());
     }
 
   /**
