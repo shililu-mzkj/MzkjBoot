@@ -1,12 +1,20 @@
 package org.mzkj.boot.system.config;
 
+import org.mzkj.boot.common.handler.WebRequestMappingHandlerMapping;
+import org.mzkj.boot.common.property.WebCoreProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
  * @title Spring Boot 2.0 解决跨域问题
@@ -16,7 +24,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @throws 
  */
 @Configuration
-public class WebMvcConfiguration implements WebMvcConfigurer {
+@Import({
+		WebCoreProperties.class
+})
+@ConditionalOnProperty(prefix = "mzkj-boot.web-core", name = "enabled", havingValue = "true", matchIfMissing = true)
+public class WebMvcConfiguration implements WebMvcConfigurer , WebMvcRegistrations {
+
+	private final WebCoreProperties webCoreProperties;
+
+	@Autowired
+	public WebMvcConfiguration(WebCoreProperties webCoreProperties) {
+		this.webCoreProperties = webCoreProperties;
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public WebMvcConfiguration webMvcConfiguration() {
+		return new WebMvcConfiguration(webCoreProperties);
+	}
 
 	@Bean
 	public CorsFilter corsFilter() {
@@ -42,5 +67,11 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/").setViewName("doc.html");
+	}
+
+
+	@Override
+	public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
+		return new WebRequestMappingHandlerMapping(webCoreProperties.getVersion());
 	}
 }

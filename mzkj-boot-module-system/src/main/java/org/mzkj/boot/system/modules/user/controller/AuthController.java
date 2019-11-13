@@ -2,6 +2,7 @@ package org.mzkj.boot.system.modules.user.controller;
 
 import org.mzkj.boot.common.base.CommonResult;
 import org.mzkj.boot.common.base.Status;
+import org.mzkj.boot.common.version.ApiVersion;
 import org.mzkj.boot.system.modules.user.po.req.LoginReq;
 import org.mzkj.boot.system.modules.user.po.response.LoginRes;
 import org.mzkj.boot.system.util.JwtUtil;
@@ -31,6 +32,7 @@ import javax.validation.Valid;
  */
 @Slf4j
 @RestController
+@ApiVersion(1)
 @RequestMapping("/auth")
 public class AuthController {
 

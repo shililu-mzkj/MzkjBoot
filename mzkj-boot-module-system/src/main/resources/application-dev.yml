@@ -76,3 +76,6 @@ spring:
     password: redis@2019
     port: 6380
 
+mzkj-boot:
+    version:
+      enabled: true
